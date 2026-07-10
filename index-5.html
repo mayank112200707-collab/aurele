@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURÈLE — Haute Couture, Collection XII</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@200;300;400&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A0A0A;
+    --panel:#121212;
+    --panel-2:#1A1A1A;
+    --bone:#F5F2EB;
+    --bone-dim:rgba(245,242,235,0.6);
+    --bone-faint:rgba(245,242,235,0.2);
+    --gold:#D4AF37;
+    --gold-dim:rgba(212,175,55,0.15);
+    --line:rgba(245,242,235,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink); color:var(--bone);
+    font-family:'Inter', sans-serif; font-weight:200;
+    line-height:1.7; letter-spacing:0.3px;
+    cursor:none;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.logotype{font-family:'Cormorant Garamond', serif; font-weight:300;}
+  .mono{font-family:'Space Mono', monospace; font-size:0.7rem; letter-spacing:2px; text-transform:uppercase;}
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1440px; margin:0 auto; padding:0 60px;}
+
+  /* Film Grain Overlay */
+  body::after{
+    content:""; position:fixed; inset:0; z-index:200; pointer-events:none;
+    opacity:0.035; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Custom Minimal Cursor */
+  .cursor-dot{
+    position:fixed; top:0; left:0; width:6px; height:6px; border-radius:50%;
+    background:var(--gold); pointer-events:none; z-index:300; transform:translate(-50%,-50%);
+    transition:width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring{
+    position:fixed; top:0; left:0; width:40px; height:40px; border-radius:50%;
+    border:1px solid rgba(212,175,55,0.2); pointer-events:none; z-index:300; transform:translate(-50%,-50%);
+    transition:width 0.3s, height 0.3s, border-color 0.3s, transform 0.1s ease-out;
+  }
+  .cursor-ring.hovered{width:60px; height:60px; border-color:var(--gold); background:rgba(212,175,55,0.03);}
+  @media (hover:none), (pointer:coarse){
+    body{cursor:auto;}
+    .cursor-dot, .cursor-ring{display:none;}
+  }
+
+  /* Scroll reveal */
+  .reveal{opacity:0; transform:translateY(35px); transition:opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* Preloader */
+  #preloader{
+    position:fixed; inset:0; z-index:400; background:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+  }
+  #preloader.done{transform:translateY(-100%);}
+  #preloader .logotype{
+    font-size:3rem; letter-spacing:16px; opacity:0;
+    animation:preloaderIn 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+  @keyframes preloaderIn{
+    0%{opacity:0; letter-spacing:24px; filter:blur(4px);}
+    100%{opacity:1; letter-spacing:14px; filter:blur(0);}
+  }
+
+  .split-word{display:inline-block; overflow:hidden; vertical-align:top;}
+  .split-word span{display:inline-block; transform:translateY(115%); animation:wordUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;}
+  @keyframes wordUp{ to{transform:translateY(0);} }
+
+  .magnetic{display:inline-block; transition:transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);}
+
+  header{
+    position:sticky; top:0; z-index:60;
+    background:rgba(10,10,10,0.75); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:30px 60px;}
+  .logotype{font-size:2rem; letter-spacing:8px; text-transform:uppercase; font-weight:300;}
+  .nav-links{display:flex; gap:50px; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; font-family:'Space Mono', monospace;}
+  .nav-links a{opacity:0.5; transition:opacity 0.3s, color 0.3s; position:relative;}
+  .nav-links a::after{content:""; position:absolute; left:50%; bottom:-6px; width:0; height:1px; background:var(--gold); transition:width 0.3s, left 0.3s;}
+  .nav-links a:hover{opacity:1; color:var(--gold);}
+  .nav-links a:hover::after{width:100%; left:0;}
+  .cart-btn{
+    background:transparent; border:none; color:var(--bone);
+    padding:10px 0; font-family:'Space Mono'; font-size:0.65rem; letter-spacing:2px;
+    text-transform:uppercase; cursor:none; transition:color 0.3s; border-bottom:1px solid transparent;
+  }
+  .cart-btn:hover{color:var(--gold); border-color:var(--gold);}
+
+  /* Hero Section */
+  .hero{
+    min-height:92vh; display:flex; align-items:center; position:relative; overflow:hidden;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(212,175,55,0.08), transparent 50%),
+      linear-gradient(180deg, #141414 0%, var(--ink) 100%);
+    padding:0 60px; border-bottom:1px solid var(--line);
+  }
+  .hero-numeral{
+    position:absolute; right:2vw; bottom:-5vw;
+    font-family:'Cormorant Garamond'; font-style:italic; font-weight:300;
+    font-size:min(45vw, 550px); line-height:0.8; color:transparent;
+    -webkit-text-stroke:1px rgba(245,242,235,0.04); pointer-events:none; user-select:none;
+    z-index:0;
+  }
+  .hero-inner{max-width:1440px; margin:0 auto; width:100%; position:relative; z-index:1;}
+  .hero-eyebrow{
+    font-family:'Space Mono'; font-size:0.65rem; letter-spacing:4px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:40px; display:flex; align-items:center; gap:20px;
+  }
+  .hero-eyebrow .rule{width:60px; height:1px; background:var(--gold); opacity:0.5;}
+  .hero h1{
+    font-size:clamp(3.5rem, 7vw, 7rem); line-height:1.05; font-weight:300;
+    max-width:1000px; margin-bottom:40px;
+  }
+  .hero h1 .italic{font-style:italic; font-weight:300; color:var(--gold);}
+  .hero h1 .thin{font-weight:200; font-family:'Inter'; display:block; font-size:0.18em; letter-spacing:4px; text-transform:uppercase; margin-top:24px; color:var(--bone-dim);}
+  .hero p{color:var(--bone-dim); font-size:1.1rem; max-width:500px; margin-bottom:50px; font-weight:300; line-height:1.8;}
+  .hero-ctas{display:flex; gap:30px; flex-wrap:wrap;}
+  
+  .btn-primary{
+    background:var(--bone); color:var(--ink); padding:18px 42px;
+    font-family:'Space Mono'; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; display:inline-block;
+    transition:background 0.3s, color 0.3s, transform 0.3s;
+    border:1px solid var(--bone);
+  }
+  .btn-primary:hover{background:transparent; color:var(--gold); border-color:var(--gold); transform:translateY(-2px);}
+  
+  .btn-ghost{
+    border:1px solid var(--line); padding:18px 42px; font-family:'Space Mono'; font-size:0.65rem;
+    letter-spacing:3px; text-transform:uppercase; display:inline-block;
+    transition:border-color 0.3s, color 0.3s, transform 0.3s;
+  }
+  .btn-ghost:hover{border-color:var(--gold); color:var(--gold); transform:translateY(-2px);}
+
+  /* Editorial Marquee */
+  .marquee{border-bottom:1px solid var(--line); padding:24px 0; overflow:hidden; white-space:nowrap; background:var(--panel);}
+  .marquee-track{
+    display:inline-block; padding-left:100%; animation:scroll 40s linear infinite;
+    font-family:'Space Mono'; font-size:0.65rem; letter-spacing:4px; text-transform:uppercase; color:var(--bone-dim);
+  }
+  .marquee-track span{margin:0 60px; color:var(--gold);}
+  @keyframes scroll{ from{transform:translateX(0);} to{transform:translateX(-100%);} }
+
+  .section{padding:160px 60px;}
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:100px; flex-wrap:wrap; gap:30px; border-bottom:1px solid var(--line); padding-bottom:40px;
+  }
+  .section-head .numeral{font-family:'Space Mono'; color:var(--gold); font-size:0.7rem; letter-spacing:3px;}
+  .section-head h2{font-size:3.5rem; margin-top:15px; font-weight:300;}
+  .section-head p{color:var(--bone-dim); font-size:1rem; max-width:400px; font-weight:300;}
+
+  /* Asymmetric Luxury Grid */
+  .grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:60px 40px;}
+  .piece{grid-column:span 4; background:transparent; display:flex; flex-direction:column; transition:transform 0.4s;}
+  /* Making layout feel couture and less template-like */
+  .piece:nth-child(2n){grid-column:span 4; margin-top:80px;}
+  .piece:nth-child(3n){grid-column:span 4; margin-top:40px;}
+  
+  .piece-media{
+    aspect-ratio:3/4; position:relative; display:flex; align-items:center; justify-content:center;
+    overflow:hidden; background:#111;
+  }
+  .piece-media::after{
+    content:''; position:absolute; inset:0; border:1px solid var(--gold); opacity:0; transition:opacity 0.4s, inset 0.4s; pointer-events:none; z-index:3;
+  }
+  .piece:hover .piece-media::after{opacity:0.4; inset:15px;}
+  
+  .piece-media .tone{
+    position:absolute; inset:0; transition:transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), filter 1.2s;
+    opacity:0.85;
+  }
+  .piece:hover .piece-media .tone{transform:scale(1.05); opacity:1;}
+  
+  .piece-roman{
+    position:absolute; top:30px; left:30px; font-family:'Space Mono';
+    font-size:0.7rem; color:var(--gold); letter-spacing:2px; z-index:2;
+  }
+  .piece-body{padding:30px 0 0 0; flex:1; display:flex; flex-direction:column; gap:12px;}
+  .piece-cat{font-family:'Space Mono'; font-size:0.6rem; letter-spacing:3px; text-transform:uppercase; color:var(--gold); opacity:0.8;}
+  .piece-title{font-family:'Cormorant Garamond'; font-size:1.8rem; font-weight:300; color:var(--bone);}
+  .piece-price{font-family:'Inter'; font-size:0.95rem; font-weight:300; letter-spacing:1px; color:var(--bone-dim);}
+  
+  .add-btn{
+    margin-top:10px; width:fit-content; padding:8px 0; border:none; background:transparent;
+    color:var(--bone); font-family:'Space Mono'; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase;
+    cursor:none; transition:color 0.3s; border-bottom:1px solid var(--line);
+  }
+  .add-btn:hover{color:var(--gold); border-color:var(--gold);}
+
+  /* Diptych Full Bleed Lookbook */
+  .lookbook{
+    display:grid; grid-template-columns:1fr 1fr; gap:20px; padding:0 20px; background:var(--ink);
+  }
+  .lookbook-panel{aspect-ratio:16/10; position:relative; overflow:hidden;}
+  .lookbook-panel .tone{position:absolute; inset:0; transition:transform 10s ease; opacity:0.7;}
+  .lookbook-panel:hover .tone{transform:scale(1.05); opacity:0.9;}
+  .lookbook-cap{
+    position:absolute; bottom:40px; left:40px; font-family:'Space Mono'; font-size:0.65rem;
+    letter-spacing:3px; text-transform:uppercase; color:var(--bone); z-index:2;
+  }
+
+  /* Editorial Press Strip */
+  .press{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:80px 60px; background:var(--ink);}
+  .press-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:40px;
+    max-width:1440px; margin:0 auto;
+  }
+  .press-item{font-family:'Cormorant Garamond'; font-style:italic; font-size:1.6rem; color:var(--bone-faint); letter-spacing:1px; transition:color 0.4s;}
+  .press-item:hover{color:var(--gold);}
+
+  /* Atelier Story */
+  .atelier{background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .atelier-inner{
+    display:grid; grid-template-columns:1fr 1fr; gap:120px; align-items:center; max-width:1440px; margin:0 auto; padding:180px 60px;
+  }
+  .atelier-visual{aspect-ratio:4/5; position:relative; overflow:hidden; border:1px solid var(--line); padding:20px; background:var(--ink);}
+  .atelier-visual .tone{position:absolute; inset:20px;}
+  .atelier h2{font-size:3.8rem; margin-bottom:35px; line-height:1.15; font-weight:300;}
+  .atelier p{color:var(--bone-dim); margin-bottom:30px; font-size:1.05rem; font-weight:300; line-height:1.8;}
+  .stat-row{display:flex; gap:60px; margin:50px 0;}
+  .stat h3{font-family:'Cormorant Garamond'; color:var(--gold); font-size:2.5rem; font-weight:300; margin-bottom:6px;}
+  .stat p{font-family:'Space Mono'; font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--bone-dim);}
+
+  /* Salon Privé Callout */
+  .private{text-align:center; padding:180px 60px; border-bottom:1px solid var(--line); background:linear-gradient(180deg, var(--ink) 0%, #111 100%);}
+  .private .numeral{color:var(--gold); font-family:'Space Mono'; letter-spacing:3px; font-size:0.7rem; margin-bottom:30px; display:block;}
+  .private h2{font-size:4rem; max-width:850px; margin:0 auto 35px; line-height:1.2; font-weight:300;}
+  .private p{color:var(--bone-dim); max-width:550px; margin:0 auto 50px; font-weight:300; font-size:1.05rem;}
+
+  footer{padding:100px 60px 40px; background:var(--ink);}
+  .foot-grid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:60px; margin-bottom:80px;}
+  .foot-logotype{font-family:'Cormorant Garamond'; font-size:2.2rem; letter-spacing:6px; text-transform:uppercase; margin-bottom:20px;}
+  .foot-col h4{font-family:'Space Mono'; font-size:0.65rem; text-transform:uppercase; letter-spacing:3px; color:var(--gold); margin-bottom:24px;}
+  .foot-col a, .foot-col p{display:block; font-size:0.9rem; color:var(--bone-dim); margin-bottom:14px; font-weight:300; transition:color 0.3s;}
+  .foot-col a:hover{color:var(--gold);}
+  .foot-bottom{
+    border-top:1px solid var(--line); padding-top:30px; font-family:'Space Mono'; font-size:0.6rem; letter-spacing:2px;
+    color:var(--bone-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; text-transform:uppercase;
+  }
+
+  /* Minimalist Cart Drawer */
+  .overlay{position:fixed; inset:0; background:rgba(0,0,0,0.8); opacity:0; pointer-events:none; transition:opacity 0.4s; z-index:100; backdrop-filter:blur(8px);}
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:min(500px,95vw);
+    background:var(--ink); border-left:1px solid var(--line); z-index:101;
+    transform:translateX(100%); transition:transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); display:flex; flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{padding:40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line);}
+  .drawer-head h3{font-family:'Cormorant Garamond'; font-size:2rem; font-weight:300;}
+  .close-btn{background:none; border:none; font-size:2rem; cursor:none; color:var(--bone); font-weight:100; transition:color 0.3s;}
+  .close-btn:hover{color:var(--gold);}
+  .drawer-items{flex:1; overflow-y:auto; padding:20px 40px;}
+  .drawer-item{display:flex; gap:24px; padding:30px 0; border-bottom:1px solid var(--line); align-items:center;}
+  .drawer-thumb{width:70px; height:90px; flex-shrink:0; position:relative; overflow:hidden; background:#111; border:1px solid var(--line);}
+  .drawer-thumb .tone{position:absolute; inset:0; opacity:0.7;}
+  .drawer-item-info{flex:1;}
+  .drawer-item-info .name{font-family:'Cormorant Garamond'; font-size:1.3rem; color:var(--bone);}
+  .drawer-item-info .price{font-family:'Inter'; font-size:0.85rem; color:var(--bone-dim); margin-top:6px; font-weight:300;}
+  .qty-btn{background:var(--panel); border:1px solid var(--line); width:30px; height:30px; border-radius:50%; cursor:none; color:var(--bone); transition:border-color 0.3s;}
+  .qty-btn:hover{border-color:var(--gold); color:var(--gold);}
+  .drawer-foot{padding:40px; border-top:1px solid var(--line); background:var(--panel);}
+  .drawer-total{display:flex; justify-content:space-between; font-family:'Cormorant Garamond'; font-size:1.5rem; margin-bottom:30px;}
+  .checkout-btn{
+    width:100%; background:var(--bone); color:var(--ink); border:1px solid var(--bone); padding:20px;
+    font-family:'Space Mono'; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; cursor:none; transition:all 0.3s;
+  }
+  .checkout-btn:hover{background:transparent; color:var(--gold); border-color:var(--gold);}
+  .empty-note{color:var(--bone-dim); font-size:1rem; padding:60px 0; text-align:center; font-family:'Cormorant Garamond'; font-style:italic;}
+
+  @media (max-width:1024px){
+    .nav-links{display:none;}
+    .grid{grid-template-columns:repeat(2,1fr); gap:40px;}
+    .piece{grid-column:span 1 !important; margin-top:0 !important;}
+    .atelier-inner{grid-template-columns:1fr; gap:60px;}
+    .lookbook{grid-template-columns:1fr;}
+    .hero-numeral{display:none;}
+    .wrap{padding:0 30px;}
+    .nav{padding:25px 30px;}
+    .section{padding:100px 30px;}
+  }
+  @media (max-width:640px){ .grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div id="preloader"><div class="logotype">AURÈLE</div></div>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<header>
+  <div class="nav wrap">
+    <div class="logotype">Aurèle</div>
+    <nav class="nav-links">
+      <a href="#collection">Collection</a>
+      <a href="#atelier">The Atelier</a>
+      <a href="#private">Salon Privé</a>
+    </nav>
+    <button class="cart-btn" onclick="openCart()">La Trousse (<span id="cart-count">0</span>)</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-numeral">XII</div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="rule"></span>Haute Couture · Édition No. XII</div>
+    <h1 id="hero-headline" style="visibility:hidden;">Quiet luxury,<br>built to outlast <span class="italic">generations.</span></h1>
+    <p>Aurèle operates in strict exclusivity with historic European master-ateliers—redefining contemporary heirloom clothing through meticulously sourced natural fibers and generational craftsmanship.</p>
+    <div class="hero-ctas">
+      <span class="magnetic" data-magnetic><a href="#collection" class="btn-primary">Explore Edition XII</a></span>
+      <span class="magnetic" data-magnetic><a href="#private" class="btn-ghost">Request Private Fitting</a></span>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    Hand-crafted in localized European Ateliers <span>·</span> Pure Botanical & Organic Noble Fibers <span>·</span> Intentionally Scarce <span>·</span> Lifetime Restorative Care <span>·</span> Hand-crafted in localized European Ateliers <span>·</span> Pure Botanical & Organic Noble Fibers <span>·</span> Intentionally Scarce <span>·</span> Lifetime Restorative Care
+  </div>
+</div>
+
+<section class="section" id="collection">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="numeral">CHAPITRE I</div>
+        <h2>The Wardrobe</h2>
+      </div>
+      <p>An edit of bespoke silhouettes curated for absolute distinction. Tailored precisely upon request.</p>
+    </div>
+    <div class="grid" id="product-grid"></div>
+  </div>
+</section>
+
+<div class="lookbook">
+  <div class="lookbook-panel reveal">
+    <div class="tone" style="background:radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.15), transparent 60%), linear-gradient(160deg,#1c1811,#0A0A0A);"></div>
+    <div class="lookbook-cap">Maison Aurèle / Vol. XII / Plate I</div>
+  </div>
+  <div class="lookbook-panel reveal">
+    <div class="tone" style="background:radial-gradient(ellipse at 70% 30%, rgba(92,26,34,0.18), transparent 60%), linear-gradient(160deg,#1c1113,#0A0A0A);"></div>
+    <div class="lookbook-cap">Maison Aurèle / Vol. XII / Plate II</div>
+  </div>
+</div>
+
+<div class="press">
+  <div class="press-row">
+    <div class="press-item reveal">The Editorial Journal</div>
+    <div class="press-item reveal">Atelier Review</div>
+    <div class="press-item reveal">Vanguard Luxury</div>
+    <div class="press-item reveal">Arch & Form</div>
+  </div>
+</div>
+
+<section class="atelier" id="atelier">
+  <div class="atelier-inner">
+    <div class="atelier-visual reveal">
+      <div class="tone" style="background:radial-gradient(ellipse at 60% 30%, rgba(212,175,55,0.12), transparent 60%), linear-gradient(160deg,#1c1710,#0A0A0A);"></div>
+    </div>
+    <div class="reveal">
+      <div class="numeral" style="color:var(--gold); font-family:'Space Mono'; margin-bottom:24px; display:block; font-size:0.7rem; letter-spacing:3px;">CHAPITRE II</div>
+      <h2>Sculpted through time, untethered by trends.</h2>
+      <p>Every dynamic curve and precision baseline is generated fully in-house, balancing centuries-old drafting discipline with refined modern architectural lines.</p>
+      <div class="stat-row">
+        <div class="stat"><h3>&lt;150</h3><p>Bespoke Outputs</p></div>
+        <div class="stat"><h3>4</h3><p>Seasonal Volumes</p></div>
+        <div class="stat"><h3>Perpetual</h3><p>Restorative Care</p></div>
+      </div>
+      <p>By enforcing an uncompromised ceiling on production metrics, true rarity remains the core luxury asset of our house.</p>
+      <a href="#collection" class="btn-ghost">Review Active Archive</a>
+    </div>
+  </div>
+</section>
+
+<section class="private" id="private">
+  <span class="numeral">CHAPITRE III</span>
+  <h2 class="reveal">Salon Privé Consultation & Global Concierge</h2>
+  <p class="reveal">Schedule a private digital presentation or an intimate suite fitting with our chief pattern cutter.</p>
+  <a href="mailto:concierge@aurele.luxury" class="btn-primary reveal">Inquire for Entry</a>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="foot-logotype">Aurèle</div>
+        <p>Maison de Couture, Paris – Milan – Tokyo. All rights reserved.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Communications</h4>
+        <a href="mailto:concierge@aurele.luxury">concierge@aurele.luxury</a>
+        <a href="#">Private Reception Portal</a>
+      </div>
+      <div class="foot-col">
+        <h4>Navigation</h4>
+        <a href="#collection">The Wardrobe</a>
+        <a href="#atelier">The House Architecture</a>
+        <a href="#private">Salon Privé</a>
+      </div>
+    </div>
+    <div class="foot-bottom wrap">
+      <span>© 2026 Aurèle International S.A. Crafted with absolute devotion.</span>
+      <span>Terminal System Access</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Selected Pieces</h3>
+    <button class="close-btn" onclick="closeCart()">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawer-items"></div>
+  <div class="drawer-foot">
+    <div class="drawer-total"><span>Estimated Value</span><span id="cart-total">$0</span></div>
+    <button class="checkout-btn" onclick="checkout()">Initiate Private Order</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('preloader').classList.add('done');
+    }, 900);
+  });
+
+  function splitIntoWords(el){
+    function walk(node){
+      node.childNodes.forEach(child => {
+        if(child.nodeType === 3 && child.textContent.trim() !== ''){
+          const words = child.textContent.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          words.forEach(w => {
+            if(w.trim() === ''){ frag.appendChild(document.createTextNode(w)); }
+            else {
+              const wrap = document.createElement('span');
+              wrap.className = 'split-word';
+              const inner = document.createElement('span');
+              inner.textContent = w;
+              wrap.appendChild(inner);
+              frag.appendChild(wrap);
+            }
+          });
+          child.replaceWith(frag);
+        } else if(child.nodeType === 1){
+          walk(child);
+        }
+      });
+    }
+    walk(el);
+    let i = 0;
+    el.querySelectorAll('.split-word span').forEach(s => {
+      s.style.animationDelay = (0.7 + i*0.04) + 's';
+      i++;
+    });
+    el.style.visibility = 'visible';
+  }
+  splitIntoWords(document.getElementById('hero-headline'));
+
+  try {
+    const lenis = new Lenis({ duration: 1.3, smoothWheel: true });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  } catch(e) { console.log('Lenis unavailable'); }
+
+  document.querySelectorAll('[data-magnetic]').forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width/2;
+      const y = e.clientY - r.top - r.height/2;
+      el.style.transform = `translate(${x*0.2}px, ${y*0.25}px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transform = 'translate(0,0)'; });
+  });
+</script>
+
+<script>
+  let PRODUCTS = [];
+  let cart = {};
+
+  async function loadProducts(){
+    try {
+      const res = await fetch('products.json', {cache:'no-store'});
+      const data = await res.json();
+      PRODUCTS = data.products || [];
+    } catch(e) {
+      console.error('Could not load products.json', e);
+      PRODUCTS = [];
+    }
+    renderProducts();
+    updateCartUI();
+  }
+
+  function mediaHTML(p){
+    if(p.image){
+      return `<img src="${p.image}" alt="${p.name}" class="tone" style="width:100%;height:100%;object-fit:cover;">`;
+    }
+    return `<div class="tone" style="background:${p.grad || '#111'}"></div>`;
+  }
+
+  function renderProducts(){
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = PRODUCTS.map((p,i) => `
+      <div class="piece reveal" style="transition-delay:${i*50}ms">
+        <div class="piece-media">
+          ${mediaHTML(p)}
+          <span class="piece-roman">${p.roman}</span>
+        </div>
+        <div class="piece-body">
+          <div class="piece-cat">${p.cat}</div>
+          <div class="piece-title">${p.name}</div>
+          <div class="piece-price">$${p.price.toLocaleString()} USD</div>
+          <button class="add-btn" onclick="addToCart(${p.id})">Inquire Allocation</button>
+        </div>
+      </div>
+    `).join('');
+    observeReveals();
+  }
+
+  function addToCart(id){
+    cart[id] = (cart[id] || 0) + 1;
+    updateCartUI();
+    openCart();
+  }
+  function changeQty(id, delta){
+    cart[id] = (cart[id] || 0) + delta;
+    if(cart[id] <= 0) delete cart[id];
+    updateCartUI();
+  }
+  function updateCartUI(){
+    const count = Object.values(cart).reduce((a,b)=>a+b,0);
+    document.getElementById('cart-count').textContent = count;
+    const itemsEl = document.getElementById('drawer-items');
+    const ids = Object.keys(cart);
+    if(ids.length === 0){
+      itemsEl.innerHTML = '<div class="empty-note">Your private allocation queue is empty.</div>';
+    } else {
+      itemsEl.innerHTML = ids.map(id => {
+        const p = PRODUCTS.find(x => x.id == id);
+        const qty = cart[id];
+        return `
+          <div class="drawer-item">
+            <div class="drawer-thumb">${mediaHTML(p)}</div>
+            <div class="drawer-item-info">
+              <div class="name">${p.name}</div>
+              <div class="price">$${p.price.toLocaleString()} × ${qty}</div>
+            </div>
+            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">−</button>
+            <span style="width:20px; text-align:center; font-size:0.8rem; font-family:'Space Mono';">${qty}</span>
+            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+          </div>
+        `;
+      }).join('');
+    }
+    const total = ids.reduce((sum,id) => sum + PRODUCTS.find(x=>x.id==id).price * cart[id], 0);
+    document.getElementById('cart-total').textContent = '$' + total.toLocaleString();
+  }
+  function openCart(){
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+  function closeCart(){
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+  function checkout(){
+    const ids = Object.keys(cart);
+    if(ids.length === 0){ alert('Queue is empty.'); return; }
+    let body = "Private Order Acquisition Request:%0D%0A%0D%0A";
+    ids.forEach(id => {
+      const p = PRODUCTS.find(x=>x.id==id);
+      body += `- ${p.name} [x${cart[id]}] ($${(p.price*cart[id]).toLocaleString()})%0D%0A`;
+    });
+    const total = ids.reduce((sum,id) => sum + PRODUCTS.find(x=>x.id==id).price * cart[id], 0);
+    body += `%0D%0AAggregate Allocation: $${total.toLocaleString()} USD`;
+    window.location.href = `mailto:concierge@aurele.luxury?subject=Private Order Reservation&body=${body}`;
+  }
+
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0, rx=0, ry=0;
+  window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  function loop(){ rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); }
+  loop();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+  });
+
+  function observeReveals(){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); } });
+    }, {threshold:0.1});
+    document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
+  }
+
+  const ghostNumeral = document.querySelector('.hero-numeral');
+  if(ghostNumeral){
+    window.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 40;
+      const y = (e.clientY / window.innerHeight - 0.5) * 40;
+      ghostNumeral.style.transform = `translate(${x}px, ${y}px)`;
+    });
+  }
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.getElementById('preloader').style.display = 'none';
+    document.getElementById('hero-headline').style.visibility = 'visible';
+    document.querySelectorAll('.split-word span').forEach(s => { s.style.animation = 'none'; s.style.transform = 'translateY(0)'; });
+  }
+
+  loadProducts();
+  observeReveals();
+</script>
+
+</body>
+</html>
