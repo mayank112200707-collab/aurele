@@ -12,37 +12,37 @@
     {
       "id": 2,
       "roman": "II",
-      "name": "Asymmetric Silk Bias Slip Dress",
+      "name": "Shirt",
       "cat": "Robes",
       "price": 1850,
-      "image": "",
+      "image": "images/uploads/photo_6235243438425182723_y.jpg",
       "grad": "radial-gradient(ellipse at 70% 30%, rgba(92,26,34,0.15), transparent 55%), linear-gradient(160deg,#241417,#0A0A0A)"
     },
     {
       "id": 3,
       "roman": "III",
-      "name": "Hand-Knit Cashmere Roll-Neck",
+      "name": "Shirt",
       "cat": "Maille",
       "price": 1200,
-      "image": "",
+      "image": "images/uploads/photo_6235243438425182724_y.jpg",
       "grad": "radial-gradient(ellipse at 40% 60%, rgba(245,242,235,0.06), transparent 55%), linear-gradient(160deg,#1c1c1c,#0A0A0A)"
     },
     {
       "id": 4,
       "roman": "IV",
-      "name": "Flannel Pleated Wide-Leg Trouser",
+      "name": " Trouser",
       "cat": "Tailleur",
       "price": 950,
-      "image": "",
+      "image": "images/uploads/photo_6235243438425182725_y.jpg",
       "grad": "radial-gradient(ellipse at 60% 20%, rgba(212,175,55,0.12), transparent 55%), linear-gradient(160deg,#1f1a12,#0A0A0A)"
     },
     {
       "id": 5,
       "roman": "V",
-      "name": "Structured Calfskin Atelier Tote",
+      "name": " Atelier Tote",
       "cat": "Accessoires",
       "price": 2600,
-      "image": "",
+      "image": "images/uploads/photo_6235243438425182726_y.jpg",
       "grad": "radial-gradient(ellipse at 30% 40%, rgba(212,175,55,0.15), transparent 55%), linear-gradient(160deg,#1c1510,#0A0A0A)"
     },
     {
