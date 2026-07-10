@@ -1,0 +1,42 @@
+# === DecapBridge auth (fill these in after you create your site at decapbridge.com) ===
+backend:
+  name: git-gateway
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME   # e.g. jane-doe/aurele-site
+  branch: main
+  identity_url: https://auth.decapbridge.com/sites/YOUR-SITE-ID
+  gateway_url: https://gateway.decapbridge.com
+
+# Where uploaded images/videos get stored in your repo, and the path used in the site
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+collections:
+  - name: "products"
+    label: "Products"
+    files:
+      - name: "products"
+        label: "Product Catalogue"
+        file: "products.json"
+        format: "json"
+        fields:
+          - { label: "Products", name: "products", widget: "list", collapsed: false, fields:
+              - { label: "ID", name: "id", widget: "number" }
+              - { label: "Roman Numeral", name: "roman", widget: "string" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Category", name: "cat", widget: "string" }
+              - { label: "Price (USD)", name: "price", widget: "number" }
+              - { label: "Product Image", name: "image", widget: "image", required: false, hint: "Upload a product photo. Leave empty to keep the default gradient tone." }
+              - { label: "Fallback Gradient (CSS)", name: "grad", widget: "string", required: false }
+            }
+
+  - name: "media_library"
+    label: "General Media"
+    files:
+      - name: "hero_video"
+        label: "Hero / Lookbook Media"
+        file: "media.json"
+        format: "json"
+        fields:
+          - { label: "Hero Background Video", name: "hero_video", widget: "file", required: false, hint: "MP4 recommended, keep under ~10MB for fast loading." }
+          - { label: "Lookbook Image 1", name: "lookbook_1", widget: "image", required: false }
+          - { label: "Lookbook Image 2", name: "lookbook_2", widget: "image", required: false }
