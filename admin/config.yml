@@ -3,10 +3,7 @@
 # from decapbridge.com before this will work.
 backend:
   name: git-gateway
-  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME   # e.g. jane-doe/aurele-site
   branch: main
-  identity_url: https://auth.decapbridge.com/sites/YOUR-SITE-ID
-  gateway_url: https://gateway.decapbridge.com
 
 # Where uploaded images/videos get stored in your repo, and the path used in the site
 media_folder: "images/uploads"
