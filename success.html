@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — AURÈLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@200;300;400&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A0A0A; --bone:#F5F2EB; --bone-dim:rgba(245,242,235,0.6);
+    --gold:#D4AF37; --line:rgba(245,242,235,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ink); color:var(--bone); font-family:'Inter',sans-serif; font-weight:200;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:40px 24px;
+  }
+  .wrap{max-width:560px;}
+  .mono{font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:4px; text-transform:uppercase; color:var(--gold);}
+  h1{font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic; font-size:3rem; margin:24px 0;}
+  p{color:var(--bone-dim); line-height:1.8; margin-bottom:12px;}
+  #order-ref{font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--gold); margin-top:20px; word-break:break-all;}
+  a.btn{
+    display:inline-block; margin-top:36px; padding:16px 40px; border:1px solid var(--line);
+    color:var(--bone); text-decoration:none; font-family:'Space Mono',monospace; font-size:0.65rem;
+    letter-spacing:3px; text-transform:uppercase; transition:all 0.3s;
+  }
+  a.btn:hover{border-color:var(--gold); color:var(--gold);}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mono">Confirmed</div>
+    <h1>Your order is secured.</h1>
+    <p>Thank you. Your payment has been received and your pieces are being prepared for allocation.</p>
+    <p>A confirmation with tracking details will be sent to the email address you provided at checkout.</p>
+    <div id="order-ref"></div>
+    <a class="btn" href="/">Return to Collection</a>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if(sessionId){
+      document.getElementById('order-ref').textContent = 'Reference: ' + sessionId;
+    }
+  </script>
+</body>
+</html>

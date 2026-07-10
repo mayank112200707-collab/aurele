@@ -417,6 +417,13 @@
         <a href="#atelier">The House Architecture</a>
         <a href="#private">Salon Privé</a>
       </div>
+      <div class="foot-col">
+        <h4>Policies</h4>
+        <a href="/shipping.html">Shipping & Delivery</a>
+        <a href="/returns.html">Returns & Exchanges</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </div>
     </div>
     <div class="foot-bottom wrap">
       <span>© 2026 Aurèle International S.A. Crafted with absolute devotion.</span>
@@ -434,7 +441,7 @@
   <div class="drawer-items" id="drawer-items"></div>
   <div class="drawer-foot">
     <div class="drawer-total"><span>Estimated Value</span><span id="cart-total">$0</span></div>
-    <button class="checkout-btn" onclick="checkout()">Initiate Private Order</button>
+    <button class="checkout-btn" id="checkout-btn" onclick="checkout()">Proceed to Secure Payment</button>
   </div>
 </div>
 
@@ -532,7 +539,7 @@
           <div class="piece-cat">${p.cat}</div>
           <div class="piece-title">${p.name}</div>
           <div class="piece-price">$${p.price.toLocaleString()} USD</div>
-          <button class="add-btn" onclick="addToCart(${p.id})">Inquire Allocation</button>
+          <button class="add-btn" onclick="addToCart(${p.id})">Add to Selection</button>
         </div>
       </div>
     `).join('');
@@ -585,17 +592,35 @@
     document.getElementById('drawer').classList.remove('open');
     document.getElementById('overlay').classList.remove('open');
   }
-  function checkout(){
+  async function checkout(){
     const ids = Object.keys(cart);
     if(ids.length === 0){ alert('Queue is empty.'); return; }
-    let body = "Private Order Acquisition Request:%0D%0A%0D%0A";
-    ids.forEach(id => {
-      const p = PRODUCTS.find(x=>x.id==id);
-      body += `- ${p.name} [x${cart[id]}] ($${(p.price*cart[id]).toLocaleString()})%0D%0A`;
-    });
-    const total = ids.reduce((sum,id) => sum + PRODUCTS.find(x=>x.id==id).price * cart[id], 0);
-    body += `%0D%0AAggregate Allocation: $${total.toLocaleString()} USD`;
-    window.location.href = `mailto:concierge@aurele.luxury?subject=Private Order Reservation&body=${body}`;
+
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const originalText = checkoutBtn.textContent;
+    checkoutBtn.textContent = 'Processing…';
+    checkoutBtn.disabled = true;
+
+    const items = ids.map(id => ({ id: Number(id), qty: cart[id] }));
+
+    try {
+      const res = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items })
+      });
+      if(!res.ok){
+        const err = await res.json().catch(()=>({error:'Unknown error'}));
+        throw new Error(err.error || 'Checkout failed');
+      }
+      const data = await res.json();
+      window.location.href = data.url;
+    } catch(e) {
+      console.error(e);
+      alert('Something went wrong starting checkout. Please try again in a moment.');
+      checkoutBtn.textContent = originalText;
+      checkoutBtn.disabled = false;
+    }
   }
 
   const dot = document.getElementById('cursor-dot');
