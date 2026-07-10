@@ -21,15 +21,18 @@ collections:
         file: "products.json"
         format: "json"
         fields:
-          - { label: "Products", name: "products", widget: "list", collapsed: false, fields:
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            collapsed: false
+            fields:
               - { label: "ID", name: "id", widget: "number" }
               - { label: "Roman Numeral", name: "roman", widget: "string" }
               - { label: "Name", name: "name", widget: "string" }
               - { label: "Category", name: "cat", widget: "string" }
               - { label: "Price (USD)", name: "price", widget: "number" }
-              - { label: "Product Image", name: "image", widget: "image", required: false, hint: "Upload a product photo. Leave empty to keep the default gradient tone." }
+              - { label: "Product Image", name: "image", widget: "image", required: false, hint: "Upload a product photo. Leave empty to keep the default." }
               - { label: "Fallback Gradient (CSS)", name: "grad", widget: "string", required: false }
-            }
 
   - name: "media_library"
     label: "General Media"
