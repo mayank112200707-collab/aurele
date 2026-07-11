@@ -1,6 +1,9 @@
 {
-  "hero_slides": [],
+  "hero_slides": [
+    "/images/uploads/photo_6235243438425182722_y.jpg",
+    "/images/uploads/photo_6235243438425182723_y.jpg"
+  ],
   "hero_video": "/images/uploads/document_6237715054205083364.mp4",
   "lookbook_1": "/images/uploads/photo_6235243438425182724_y.jpg",
-  "lookbook_2": ""
+  "lookbook_2": "/images/uploads/photo_6235243438425182722_y.jpg"
 }
