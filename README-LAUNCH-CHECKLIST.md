@@ -29,7 +29,13 @@ Once the CMS is connected, go to `/admin`:
 - **Categories** → add, rename, or remove categories. Each needs a short lowercase **ID** (e.g. `manteaux`) — this is used in the page URL `/category/manteaux`.
 - **Products** → each product now supports **multiple photos** (first one is the cover shown everywhere; all of them show in a gallery on that product's own page at `/product/{id}`), and a **Category** dropdown.
   - ⚠️ **Important**: if you add a brand-new category, its ID won't appear in the product's Category dropdown automatically. Open `admin/config.yml`, find the `options:` line under the product `Category` field, and add the new ID to that list, then commit.
-- **Homepage Hero & Lookbook** → upload one or more **Hero Slideshow Photos** to get an auto-sliding background behind the homepage headline. Leave empty to keep the current dark gradient look.
+- **Homepage Hero & Lookbook** → every remaining image on the homepage is controllable here:
+  - **Hero Slideshow Photos** — one or more photos, auto-sliding behind the homepage headline
+  - **Lookbook Image 1 / 2** — the two large diptych photos below the product grid
+  - **"The House Architecture" Section Image** — the photo next to the "Sculpted through time" text
+  - Leave any of these empty to keep the current dark gradient look instead.
+
+**Every image on the site is now CMS-editable** — product photos, category photos (inherited from products), the homepage hero, the two lookbook panels, and the atelier section image. Nothing is hardcoded in the HTML anymore.
 
 ## 6. How the new pages work
 - `/category/{id}` — shows all products in one category (auto-generated from `categories.json`, no new files needed per category)

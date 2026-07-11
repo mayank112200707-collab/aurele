@@ -7,9 +7,7 @@
       "cat": "manteaux",
       "price": 4200,
       "desc": "Cut from a heavyweight herringbone wool sourced from a historic Biella mill, this overcoat is fully canvassed by hand and finished with horn buttons.",
-      "images": [
-        "/images/uploads/551405077_18535193422041762_7008851790195866646_n.jpg"
-      ],
+      "images": [],
       "grad": "radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.15), transparent 55%), linear-gradient(160deg,#241f17,#0A0A0A)"
     },
     {
@@ -19,10 +17,48 @@
       "cat": "robes",
       "price": 1850,
       "desc": "Bias-cut from a single length of mulberry silk charmeuse, draping the body without a single dart or seam interruption.",
-      "images": [
-        "/images/uploads/photo_6235243438425182724_y.jpg"
-      ],
+      "images": [],
       "grad": "radial-gradient(ellipse at 70% 30%, rgba(92,26,34,0.15), transparent 55%), linear-gradient(160deg,#241417,#0A0A0A)"
+    },
+    {
+      "id": 3,
+      "roman": "III",
+      "name": "Hand-Knit Cashmere Roll-Neck",
+      "cat": "maille",
+      "price": 1200,
+      "desc": "Hand-knitted from four-ply Mongolian cashmere on traditional needles, taking a single artisan eleven hours to complete.",
+      "images": [],
+      "grad": "radial-gradient(ellipse at 40% 60%, rgba(245,242,235,0.06), transparent 55%), linear-gradient(160deg,#1c1c1c,#0A0A0A)"
+    },
+    {
+      "id": 4,
+      "roman": "IV",
+      "name": "Flannel Pleated Wide-Leg Trouser",
+      "cat": "tailleur",
+      "price": 950,
+      "desc": "A relaxed, fluid trouser in brushed Italian flannel with double forward pleats and a hand-picked waistband.",
+      "images": [],
+      "grad": "radial-gradient(ellipse at 60% 20%, rgba(212,175,55,0.12), transparent 55%), linear-gradient(160deg,#1f1a12,#0A0A0A)"
+    },
+    {
+      "id": 5,
+      "roman": "V",
+      "name": "Structured Calfskin Atelier Tote",
+      "cat": "accessoires",
+      "price": 2600,
+      "desc": "Full-grain calfskin over a rigid internal frame, saddle-stitched by hand and finished with solid brass hardware.",
+      "images": [],
+      "grad": "radial-gradient(ellipse at 30% 40%, rgba(212,175,55,0.15), transparent 55%), linear-gradient(160deg,#1c1510,#0A0A0A)"
+    },
+    {
+      "id": 6,
+      "roman": "VI",
+      "name": "Double-Breasted Wool Silk Blazer",
+      "cat": "tailleur",
+      "price": 2100,
+      "desc": "A wool-silk blend blazer with a soft, unstructured shoulder and horn buttons, tailored fully by hand in-house.",
+      "images": [],
+      "grad": "radial-gradient(ellipse at 65% 25%, rgba(245,242,235,0.05), transparent 55%), linear-gradient(160deg,#12161f,#0A0A0A)"
     }
   ]
 }
