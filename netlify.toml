@@ -17,3 +17,13 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+[[redirects]]
+  from = "/category/*"
+  to = "/category.html?cat=:splat"
+  status = 200
+
+[[redirects]]
+  from = "/product/*"
+  to = "/product.html?id=:splat"
+  status = 200

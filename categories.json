@@ -1,0 +1,9 @@
+{
+  "categories": [
+    { "id": "manteaux", "name": "Manteaux", "tagline": "Outerwear & Coats" },
+    { "id": "robes", "name": "Robes", "tagline": "Dresses" },
+    { "id": "maille", "name": "Maille", "tagline": "Knitwear" },
+    { "id": "tailleur", "name": "Tailleur", "tagline": "Tailoring" },
+    { "id": "accessoires", "name": "Accessoires", "tagline": "Accessories" }
+  ]
+}

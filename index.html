@@ -119,6 +119,17 @@
     -webkit-text-stroke:1px rgba(245,242,235,0.04); pointer-events:none; user-select:none;
     z-index:0;
   }
+  .hero-slider{position:absolute; inset:0; z-index:0;}
+  .hero-slider.has-slides ~ .hero-numeral{opacity:0.5;}
+  .hero-slide{
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    opacity:0; transition:opacity 2s ease;
+  }
+  .hero-slide.active{opacity:1;}
+  .hero-slider.has-slides::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.75) 100%);
+  }
   .hero-inner{max-width:1440px; margin:0 auto; width:100%; position:relative; z-index:1;}
   .hero-eyebrow{
     font-family:'Space Mono'; font-size:0.65rem; letter-spacing:4px; text-transform:uppercase;
@@ -159,6 +170,14 @@
   @keyframes scroll{ from{transform:translateX(0);} to{transform:translateX(-100%);} }
 
   .section{padding:160px 60px;}
+  .cat-nav-wrap{padding:36px 60px; border-bottom:1px solid var(--line);}
+  .cat-nav{display:flex; gap:16px; flex-wrap:wrap;}
+  .cat-pill{
+    font-family:'Space Mono'; font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
+    padding:10px 22px; border:1px solid var(--line); color:var(--bone-dim); transition:all 0.3s; white-space:nowrap;
+  }
+  .cat-pill:hover{border-color:var(--gold); color:var(--gold);}
+  .cat-pill.active{border-color:var(--gold); color:var(--gold); background:rgba(212,175,55,0.06);}
   .section-head{
     display:flex; justify-content:space-between; align-items:flex-end;
     margin-bottom:100px; flex-wrap:wrap; gap:30px; border-bottom:1px solid var(--line); padding-bottom:40px;
@@ -321,6 +340,7 @@
 </header>
 
 <section class="hero">
+  <div class="hero-slider" id="hero-slider"></div>
   <div class="hero-numeral">XII</div>
   <div class="hero-inner">
     <div class="hero-eyebrow"><span class="rule"></span>Haute Couture · Édition No. XII</div>
@@ -337,6 +357,10 @@
   <div class="marquee-track">
     Hand-crafted in localized European Ateliers <span>·</span> Pure Botanical & Organic Noble Fibers <span>·</span> Intentionally Scarce <span>·</span> Lifetime Restorative Care <span>·</span> Hand-crafted in localized European Ateliers <span>·</span> Pure Botanical & Organic Noble Fibers <span>·</span> Intentionally Scarce <span>·</span> Lifetime Restorative Care
   </div>
+</div>
+
+<div class="cat-nav-wrap wrap">
+  <div class="cat-nav" id="category-nav"></div>
 </div>
 
 <section class="section" id="collection">
@@ -432,19 +456,6 @@
   </div>
 </footer>
 
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-head">
-    <h3>Selected Pieces</h3>
-    <button class="close-btn" onclick="closeCart()">&times;</button>
-  </div>
-  <div class="drawer-items" id="drawer-items"></div>
-  <div class="drawer-foot">
-    <div class="drawer-total"><span>Estimated Value</span><span id="cart-total">$0</span></div>
-    <button class="checkout-btn" id="checkout-btn" onclick="checkout()">Proceed to Secure Payment</button>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script>
   window.addEventListener('load', () => {
@@ -503,41 +514,39 @@
   });
 </script>
 
+<script src="/assets/site.js"></script>
 <script>
-  let PRODUCTS = [];
-  let cart = {};
+  let heroSlideTimer = null;
 
-  async function loadProducts(){
-    try {
-      const res = await fetch('products.json', {cache:'no-store'});
-      const data = await res.json();
-      PRODUCTS = data.products || [];
-    } catch(e) {
-      console.error('Could not load products.json', e);
-      PRODUCTS = [];
+  function renderHeroSlider(slides){
+    const el = document.getElementById('hero-slider');
+    if(!el) return;
+    const valid = (slides || []).filter(Boolean);
+    if(valid.length === 0) return; // keep the existing gradient background
+    el.innerHTML = valid.map((src,i) => `<div class="hero-slide${i===0?' active':''}" style="background-image:url('${src}')"></div>`).join('');
+    el.classList.add('has-slides');
+    if(valid.length > 1){
+      let i = 0;
+      heroSlideTimer = setInterval(() => {
+        const slidesEls = el.querySelectorAll('.hero-slide');
+        slidesEls[i].classList.remove('active');
+        i = (i + 1) % slidesEls.length;
+        slidesEls[i].classList.add('active');
+      }, 5000);
     }
-    renderProducts();
-    updateCartUI();
-  }
-
-  function mediaHTML(p){
-    if(p.image){
-      return `<img src="${p.image}" alt="${p.name}" class="tone" style="width:100%;height:100%;object-fit:cover;">`;
-    }
-    return `<div class="tone" style="background:${p.grad || '#111'}"></div>`;
   }
 
   function renderProducts(){
     const grid = document.getElementById('product-grid');
-    grid.innerHTML = PRODUCTS.map((p,i) => `
+    grid.innerHTML = window.PRODUCTS.map((p,i) => `
       <div class="piece reveal" style="transition-delay:${i*50}ms">
-        <div class="piece-media">
+        <a href="/product/${p.id}" class="piece-media">
           ${mediaHTML(p)}
           <span class="piece-roman">${p.roman}</span>
-        </div>
+        </a>
         <div class="piece-body">
-          <div class="piece-cat">${p.cat}</div>
-          <div class="piece-title">${p.name}</div>
+          <a href="/category/${p.cat}" class="piece-cat">${categoryName(p.cat)}</a>
+          <a href="/product/${p.id}" class="piece-title">${p.name}</a>
           <div class="piece-price">$${p.price.toLocaleString()} USD</div>
           <button class="add-btn" onclick="addToCart(${p.id})">Add to Selection</button>
         </div>
@@ -546,81 +555,18 @@
     observeReveals();
   }
 
-  function addToCart(id){
-    cart[id] = (cart[id] || 0) + 1;
-    updateCartUI();
-    openCart();
-  }
-  function changeQty(id, delta){
-    cart[id] = (cart[id] || 0) + delta;
-    if(cart[id] <= 0) delete cart[id];
-    updateCartUI();
-  }
-  function updateCartUI(){
-    const count = Object.values(cart).reduce((a,b)=>a+b,0);
-    document.getElementById('cart-count').textContent = count;
-    const itemsEl = document.getElementById('drawer-items');
-    const ids = Object.keys(cart);
-    if(ids.length === 0){
-      itemsEl.innerHTML = '<div class="empty-note">Your private allocation queue is empty.</div>';
-    } else {
-      itemsEl.innerHTML = ids.map(id => {
-        const p = PRODUCTS.find(x => x.id == id);
-        const qty = cart[id];
-        return `
-          <div class="drawer-item">
-            <div class="drawer-thumb">${mediaHTML(p)}</div>
-            <div class="drawer-item-info">
-              <div class="name">${p.name}</div>
-              <div class="price">$${p.price.toLocaleString()} × ${qty}</div>
-            </div>
-            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">−</button>
-            <span style="width:20px; text-align:center; font-size:0.8rem; font-family:'Space Mono';">${qty}</span>
-            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
-          </div>
-        `;
-      }).join('');
-    }
-    const total = ids.reduce((sum,id) => sum + PRODUCTS.find(x=>x.id==id).price * cart[id], 0);
-    document.getElementById('cart-total').textContent = '$' + total.toLocaleString();
-  }
-  function openCart(){
-    document.getElementById('drawer').classList.add('open');
-    document.getElementById('overlay').classList.add('open');
-  }
-  function closeCart(){
-    document.getElementById('drawer').classList.remove('open');
-    document.getElementById('overlay').classList.remove('open');
-  }
-  async function checkout(){
-    const ids = Object.keys(cart);
-    if(ids.length === 0){ alert('Queue is empty.'); return; }
-
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const originalText = checkoutBtn.textContent;
-    checkoutBtn.textContent = 'Processing…';
-    checkoutBtn.disabled = true;
-
-    const items = ids.map(id => ({ id: Number(id), qty: cart[id] }));
-
-    try {
-      const res = await fetch('/.netlify/functions/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items })
-      });
-      if(!res.ok){
-        const err = await res.json().catch(()=>({error:'Unknown error'}));
-        throw new Error(err.error || 'Checkout failed');
-      }
-      const data = await res.json();
-      window.location.href = data.url;
-    } catch(e) {
-      console.error(e);
-      alert('Something went wrong starting checkout. Please try again in a moment.');
-      checkoutBtn.textContent = originalText;
-      checkoutBtn.disabled = false;
-    }
+  async function loadProducts(){
+    const [productData, catData, mediaData] = await Promise.all([
+      loadJSON('/products.json'),
+      loadJSON('/categories.json'),
+      loadJSON('/media.json')
+    ]);
+    window.PRODUCTS = (productData && productData.products) || [];
+    window.CATEGORIES = (catData && catData.categories) || [];
+    renderProducts();
+    renderCategoryNav('category-nav');
+    initCartUI();
+    if(mediaData) renderHeroSlider(mediaData.hero_slides);
   }
 
   const dot = document.getElementById('cursor-dot');

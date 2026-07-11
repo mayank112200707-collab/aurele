@@ -24,8 +24,18 @@ Search the project for `concierge@aurele.luxury` (it's in `index.html`, `shippin
 ## 4. Update robots.txt
 Replace `YOUR-SITE-DOMAIN` in `robots.txt` with your real Netlify domain.
 
-## 5. Add real product photos
-Once the CMS is connected, upload photos through `/admin` — no code changes needed. Until then, the site uses tasteful gradient placeholders.
+## 5. Add real product photos, categories, and homepage slides
+Once the CMS is connected, go to `/admin`:
+- **Categories** → add, rename, or remove categories. Each needs a short lowercase **ID** (e.g. `manteaux`) — this is used in the page URL `/category/manteaux`.
+- **Products** → each product now supports **multiple photos** (first one is the cover shown everywhere; all of them show in a gallery on that product's own page at `/product/{id}`), and a **Category** dropdown.
+  - ⚠️ **Important**: if you add a brand-new category, its ID won't appear in the product's Category dropdown automatically. Open `admin/config.yml`, find the `options:` line under the product `Category` field, and add the new ID to that list, then commit.
+- **Homepage Hero & Lookbook** → upload one or more **Hero Slideshow Photos** to get an auto-sliding background behind the homepage headline. Leave empty to keep the current dark gradient look.
+
+## 6. How the new pages work
+- `/category/{id}` — shows all products in one category (auto-generated from `categories.json`, no new files needed per category)
+- `/product/{id}` — shows one product with its full photo gallery
+- Clicking any product photo or title anywhere on the site goes to its `/product/{id}` page
+- The cart now persists across all pages (via browser storage), so adding something on a category page and checking out from the homepage works seamlessly
 
 ## 6. Review legal pages
 `shipping.html`, `returns.html`, `privacy.html`, and `terms.html` contain solid starter policies, but they are not legal advice — have a lawyer review them before taking real orders, especially if you ship internationally or operate in the EU/UK (GDPR).

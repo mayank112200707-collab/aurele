@@ -3,13 +3,41 @@
 # from decapbridge.com before this will work.
 backend:
   name: git-gateway
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME
   branch: main
+  identity_url: https://auth.decapbridge.com/sites/YOUR-SITE-ID
+  gateway_url: https://gateway.decapbridge.com
 
-# Where uploaded images/videos get stored in your repo, and the path used in the site
 media_folder: "images/uploads"
-public_folder: "images/uploads"
+public_folder: "/images/uploads"
 
 collections:
+  - name: "categories"
+    label: "Categories"
+    files:
+      - name: "categories"
+        label: "Category List"
+        file: "categories.json"
+        format: "json"
+        fields:
+          - name: "categories"
+            label: "Categories"
+            widget: "list"
+            collapsed: false
+            summary: "{{fields.name}}"
+            fields:
+              - name: "id"
+                label: "ID (used in URLs — lowercase, no spaces, e.g. manteaux)"
+                widget: "string"
+                hint: "After adding a new category here, also add its ID as an option in the product Category field below."
+              - name: "name"
+                label: "Display Name"
+                widget: "string"
+              - name: "tagline"
+                label: "Tagline"
+                widget: "string"
+                required: false
+
   - name: "products"
     label: "Products"
     files:
@@ -18,27 +46,72 @@ collections:
         file: "products.json"
         format: "json"
         fields:
-          - label: "Products"
-            name: "products"
+          - name: "products"
+            label: "Products"
             widget: "list"
-            collapsed: false
+            collapsed: true
+            summary: "{{fields.name}}"
             fields:
-              - { label: "ID", name: "id", widget: "number" }
-              - { label: "Roman Numeral", name: "roman", widget: "string" }
-              - { label: "Name", name: "name", widget: "string" }
-              - { label: "Category", name: "cat", widget: "string" }
-              - { label: "Price (USD)", name: "price", widget: "number" }
-              - { label: "Product Image", name: "image", widget: "image", required: false, hint: "Upload a product photo. Leave empty to keep the default." }
-              - { label: "Fallback Gradient (CSS)", name: "grad", widget: "string", required: false }
+              - name: "id"
+                label: "ID (unique number)"
+                widget: "number"
+              - name: "roman"
+                label: "Roman Numeral"
+                widget: "string"
+                required: false
+              - name: "name"
+                label: "Name"
+                widget: "string"
+              - name: "cat"
+                label: "Category"
+                widget: "select"
+                hint: "Must match a Category ID exactly. If you added a new category above, add its ID as an option here too."
+                options: ["manteaux", "robes", "maille", "tailleur", "accessoires"]
+              - name: "price"
+                label: "Price (USD)"
+                widget: "number"
+              - name: "desc"
+                label: "Description"
+                widget: "text"
+                required: false
+              - name: "images"
+                label: "Photos"
+                widget: "list"
+                hint: "Upload one or more photos. The first one is used as the cover image everywhere on the site; all of them appear on the product's own page."
+                field:
+                  name: "src"
+                  label: "Photo"
+                  widget: "image"
+              - name: "grad"
+                label: "Fallback Gradient (CSS, used only if no photos are uploaded)"
+                widget: "string"
+                required: false
 
   - name: "media_library"
     label: "General Media"
     files:
-      - name: "hero_video"
-        label: "Hero / Lookbook Media"
+      - name: "hero_media"
+        label: "Homepage Hero & Lookbook"
         file: "media.json"
         format: "json"
         fields:
-          - { label: "Hero Background Video", name: "hero_video", widget: "file", required: false, hint: "MP4 recommended, keep under ~10MB for fast loading." }
-          - { label: "Lookbook Image 1", name: "lookbook_1", widget: "image", required: false }
-          - { label: "Lookbook Image 2", name: "lookbook_2", widget: "image", required: false }
+          - name: "hero_slides"
+            label: "Hero Slideshow Photos"
+            widget: "list"
+            hint: "Upload one or more photos to auto-slide behind the homepage headline. Leave empty to keep the default dark gradient background."
+            field:
+              name: "src"
+              label: "Photo"
+              widget: "image"
+          - name: "hero_video"
+            label: "Hero Background Video (optional, not currently used)"
+            widget: "file"
+            required: false
+          - name: "lookbook_1"
+            label: "Lookbook Image 1"
+            widget: "image"
+            required: false
+          - name: "lookbook_2"
+            label: "Lookbook Image 2"
+            widget: "image"
+            required: false
